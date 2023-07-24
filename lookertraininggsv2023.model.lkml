@@ -18,3 +18,8 @@ include: "/views/*.view.lkml"                # include all views in the views/ f
 #     sql_on: ${users.id} = ${orders.user_id} ;;
 #   }
 # }
+explore: top_10_customers_by_max_profit_and_category {}
+explore: top_5_popular_products_per_county {}
+explore: top_5_stores_with_max_sales_amount {}
+explore: list_of_orders {}
+explore: orders_with_location {}
