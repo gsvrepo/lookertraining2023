@@ -9,7 +9,7 @@ view: orders_with_location {
     type: string
     sql: ${TABLE}.CustomerName ;;
   }
-  dimension: latitude {
+   dimension: latitude {
     type: number
     sql: ${TABLE}.Latitude ;;
   }
@@ -17,6 +17,12 @@ view: orders_with_location {
     type: number
     sql: ${TABLE}.Longitude ;;
   }
+  dimension: location {
+    type:  location
+    sql_latitude: ${latitude} ;;
+    sql_longitude: ${longitude}  ;;
+  }
+
   dimension_group: order {
     type: time
     timeframes: [raw, date, week, month, quarter, year]

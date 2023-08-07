@@ -23,3 +23,11 @@ explore: top_5_popular_products_per_county {}
 explore: top_5_stores_with_max_sales_amount {}
 explore: list_of_orders {}
 explore: orders_with_location {}
+explore: accounts {}
+#explore: opportunities {}
+explore: opportunities {
+  join: accounts {
+    relationship: many_to_one
+    sql_on: ${accounts.account_id} = ${opportunities.account_id} ;;
+  }
+}
