@@ -24,6 +24,7 @@ explore: top_5_stores_with_max_sales_amount {}
 explore: list_of_orders {}
 explore: orders_with_location {}
 explore: accounts {}
+explore: opportunities_with_location_info {}
 #explore: opportunities {}
 explore: opportunities {
   join: accounts {

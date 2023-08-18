@@ -40,6 +40,43 @@ view: opportunities {
     type:  date
     sql: max(${close_date}) ;;
   }
+  parameter: Selected_Field {
+    allowed_value: {
+      label: "Name"
+      value: "name"
+    }
+    allowed_value: {
+      label: "Stage"
+      value: "stage"
+    }
+    allowed_value: {
+      label: "Forecast Category"
+      value: "forecast_category"
+    }
+  }
+  # dimension: Selected_Dimension {
+  #   label_from_parameter: Selected_Field
+  #   type: string
+  #   sql: {% if Selected_Field._parameter_value == "name"%}
+  #         then ${name}
+  #         {% elsif Selected_Field._parameter_value == "stage"%}
+  #         then ${stage}
+  #         {%elsif Selected_Field._parameter_value == "forecast_category%}
+  #         then ${forecast_category}
+  #         {%endif%} ;;
+  # }
+  dimension: Selected_Dimension {
+      label_from_parameter: Selected_Field
+      type: string
+      sql: case
+      WHEN {% parameter Selected_Field %} = 'name'
+      then ${name}
+      WHEN {% parameter Selected_Field %} = 'stage'
+      then ${stage}
+      WHEN {% parameter Selected_Field %} = 'forecast_category'
+      then ${forecast_category}
+      end;;
+      }
   parameter: Selected_Time_Period {
     allowed_value: {
       label: "YTD"
@@ -60,15 +97,16 @@ view: opportunities {
   }
   dimension: Selected_Metric {
     label_from_parameter: Selected_Time_Period
-    sql: {% if Selected_Time_Period._parameter_value == "'YTD'"%}
-    then ${YTD}
-    {%elsif Selected_Time_Period._parameter_value == "'MTD'"%}
-    then ${MTD}
-    {%elsif Selected_Time_Period._parameter_value == "'WTD'"%}
-    then ${WTD}
-    {%elsif Selected_Time_Period._parameter_value == "'QTD'"%}
+    sql: case
+    WHEN {% parameter Selected_Time_Period %} = 'QTD'
     then ${QTD}
-    {%endif%} ;;
+    WHEN {% parameter Selected_Time_Period %} = 'WTD'
+    then ${WTD}
+    WHEN {% parameter Selected_Time_Period %} = 'MTD'
+    then ${MTD}
+    WHEN {% parameter Selected_Time_Period %} = 'YTD'
+    then ${YTD}
+    end;;
   }
 
   dimension: YTD {
@@ -88,7 +126,7 @@ view: opportunities {
   }
   dimension: QTD {
     type:  yesno
-    sql: ${close_date} >= DATE_TRUNC(current_date(), QUARTER) and ${close_date} <= current_date() ;;
+    sql: ${close_date} >= DATE_TRUNC(current_date(), QUARTER) and ${close_date} <= current_date();;
   }
   measure: year_to_date {
     label: "Year to Date"
@@ -268,7 +306,7 @@ measure: ytd_amount  {
     sql: ${stage} ;;
     link: {
       label: "Stage Name"
-      url: "https://springmllook.cloud.looker.com/dashboards/59?=Stage{{ value }}"
+      url: "https://springmllook.cloud.looker.com/dashboards/59?Stage={{ value }}"
     }
   }
   dimension: won {
